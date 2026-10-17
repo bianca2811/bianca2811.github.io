@@ -3,91 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bianca Orihuela | Portafolio</title>
+    <title>Bianca Orihuela | Portafolio Profesional Dev</title>
     <style>
-        /* Fondo pastel oscuro y suave estilo terminal moderna */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #1a1e24; 
-            color: #e4e6eb; 
-            margin: 0; 
-            padding: 40px; 
+        :root {
+            --bg-principal: #0f111a;
+            --bg-tarjeta: #16192b;
+            --bg-card-item: #1f233a;
+            --texto-oscuro: #f8f8f2;
+            --texto-mutado: #a6accd;
+            --dev-pink: #ff79c6;
+            --dev-purple: #bd93f9;
+            --dev-cyan: #8be9fd;
+            --dev-green: #50fa7b;
+            --dev-yellow: #f1fa8c;
+            --border-soft: #2b304d;
+        }
+        body {
+            font-family: 'Consolas', 'Fira Code', 'Segoe UI', Tahoma, monospace;
+            background-color: var(--bg-principal);
+            color: var(--texto-oscuro);
+            margin: 0;
             display: flex;
+            min-height: 100vh;
             justify-content: center;
+            background-image: radial-gradient(circle at 50% 0%, rgba(255, 121, 198, 0.06), transparent 70%);
+        }
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--dev-pink);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 121, 198, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle:hover {
+            background-color: #232845;
+            box-shadow: 0 0 20px rgba(255, 121, 198, 0.5);
+        }
+        .menu-toggle .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--dev-pink);
+            border-radius: 2px;
+        }
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-tarjeta);
+            border-right: 1px solid var(--dev-purple);
+            position: fixed;
+            top: 0; bottom: 0; left: -320px;
+            padding: 90px 20px 30px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.9);
+            transition: left 0.3s ease;
+            z-index: 999;
+        }
+        .sidebar.open { left: 0; }
+        .sidebar a {
+            text-decoration: none;
+            color: var(--texto-mutado);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
             align-items: center;
-            min-height: 80vh;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
         }
-        .container { 
-            background-color: #242932; 
-            padding: 40px; 
-            border-radius: 16px; 
-            border: 1px solid #383f4c;
-            max-width: 700px; 
-            text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #232845;
+            color: var(--dev-pink);
+            border-left-color: var(--dev-cyan);
+            transform: translateX(5px);
         }
-        /* Color verde pastel para el título principal animado */
-        h1 { 
-            color: #70a1ff; 
-            margin-bottom: 15px; 
-            font-size: 2.2rem;
-            min-height: 45px; /* Evita que el contenido salte al escribir */
+        .main-content {
+            padding: 90px 40px 40px;
+            max-width: 800px;
+            width: 100%;
         }
-        /* Color verde agua pastel para las carreras */
-        h3 { 
-            color: #2ed573; 
-            font-weight: 500; 
-            margin-top: 0;
-            font-size: 1.2rem;
-            border-bottom: 1px solid #383f4c;
-            padding-bottom: 15px;
+        .section-card {
+            background-color: var(--bg-tarjeta);
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            display: none;
+            position: relative;
+            overflow: hidden;
         }
-        p { 
-            line-height: 1.7; 
-            color: #b2bec3; 
-            font-size: 1.05rem;
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--dev-pink), var(--dev-purple), var(--dev-cyan));
         }
-        /* Efecto de cursor parpadeante de la máquina de escribir */
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            background-color: #70a1ff;
-            margin-left: 5px;
-            animation: blink 0.7s infinite;
-        }
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+        .section-card.active { display: block; }
+        h1 { color: var(--dev-pink); margin: 0 0 15px; font-size: 2.2rem; min-height: 45px; text-shadow: 0 0 12px rgba(255, 121, 198, 0.35); }
+        h3 { color: var(--dev-cyan); font-weight: 600; margin-top: 0; font-size: 1.1rem; padding-bottom: 15px; border-bottom: 1px dashed var(--border-soft); }
+        p { line-height: 1.8; color: var(--texto-mutado); font-size: 1rem; }
+        .section-card h2 { color: var(--dev-purple); margin-top: 0; border-bottom: 1px solid var(--border-soft); padding-bottom: 10px; font-size: 1.4rem; }
+        .profile-container { display: flex; gap: 25px; align-items: center; flex-wrap: wrap; margin: 20px 0; }
+        .profile-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--dev-pink); box-shadow: 0 0 20px rgba(255, 121, 198, 0.4); background-color: var(--bg-principal); }
+        .profile-info { flex: 1; min-width: 250px; }
+        .info-tag { display: inline-block; background-color: var(--bg-card-item); color: var(--dev-green); padding: 6px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 600; margin: 4px 4px 4px 0; border: 1px solid var(--dev-green); }
+        .btn-cv { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--dev-pink), #d63384); color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 1rem; margin-top: 20px; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(255, 121, 198, 0.4); }
+        .btn-cv:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(255, 121, 198, 0.7); }
+        .software-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-top: 25px; }
+        .software-mini-card { background-color: var(--bg-card-item); padding: 18px; border-radius: 10px; border: 1px solid var(--border-soft); transition: 0.2s; }
+        .software-mini-card:hover { transform: translateY(-2px); border-color: var(--dev-cyan); }
+        .software-mini-card h4 { margin: 0 0 12px; color: var(--dev-yellow); font-size: 1rem; border-bottom: 1px solid var(--border-soft); padding-bottom: 6px; }
+        .badge-container { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tech-tag { background-color: var(--bg-tarjeta); color: var(--dev-cyan); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border-soft); }
+        .item-card { background-color: var(--bg-card-item); padding: 18px 20px; border-radius: 10px; border: 1px solid var(--border-soft); margin-bottom: 12px; transition: 0.2s; }
+        .item-card:hover { border-color: var(--dev-pink); transform: translateY(-2px); box-shadow: 0 0 12px rgba(255, 121, 198, 0.2); }
+        .item-card h4 { margin: 0 0 6px; color: var(--texto-oscuro); font-size: 1.05rem; }
+        .item-card p { margin: 0 0 8px; font-size: 0.95rem; }
+        .idioma-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 600; }
+        .flag-badge { display: inline-flex; align-items: center; gap: 8px; }
+        .flag-icon { width: 24px; height: 18px; border-radius: 3px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
+        .progress-bar-container { width: 100%; background-color: var(--bg-tarjeta); border-radius: 10px; height: 12px; overflow: hidden; border: 1px solid var(--border-soft); }
+        .progress-bar { height: 100%; border-radius: 10px; }
+        .card-link { display: inline-flex; align-items: center; gap: 6px; color: var(--dev-cyan); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .card-link:hover { text-decoration: underline; color: var(--dev-green); }
+        .cursos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px; margin-top: 20px; }
+        .curso-badge-card { position: relative; background-color: var(--bg-card-item); border: 1px solid var(--border-soft); padding: 16px 20px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; transition: all 0.3s ease; overflow: hidden; min-height: 75px; }
+        .curso-badge-card:hover { border-color: var(--dev-pink); background-color: #2a2542; transform: translateY(-3px); box-shadow: 0 0 15px rgba(255, 121, 198, 0.3); }
+        .curso-titulo { font-size: 0.95rem; font-weight: 600; color: var(--texto-oscuro); transition: transform 0.3s ease; }
+        .curso-badge-card:hover .curso-titulo { transform: translateY(-10px); }
+        .curso-hover-link { position: absolute; bottom: 12px; left: 20px; opacity: 0; visibility: hidden; color: var(--dev-green); text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; }
+        .curso-badge-card:hover .curso-hover-link { opacity: 1; visibility: visible; }
+        .contacto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+        .contacto-card { display: flex; align-items: center; gap: 15px; background-color: var(--bg-card-item); padding: 20px; border-radius: 10px; border: 1px solid var(--border-soft); text-decoration: none; color: var(--texto-oscuro); transition: all 0.2s ease; }
+        .contacto-card:hover { transform: translateY(-3px); border-color: var(--dev-purple); background-color: #25233d; box-shadow: 0 0 15px rgba(189, 147, 249, 0.3); }
+        .contacto-icon { width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .contacto-info h4 { margin: 0; font-size: 0.85rem; color: var(--texto-mutado); text-transform: uppercase; letter-spacing: 0.5px; }
+        .contacto-info p { margin: 4px 0 0; font-size: 1rem; font-weight: 600; color: var(--texto-oscuro); }
+        .cursor { display: inline-block; width: 12px; background-color: var(--dev-pink); margin-left: 5px; animation: blink 0.7s infinite; box-shadow: 0 0 8px var(--dev-pink); }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- El texto de este H1 se escribirá solo automáticamente -->
-        <h1 id="typing-text"><span class="cursor">&nbsp;</span></h1>
-        
-        <h3>Electrónica Industrial ⚡ | Estudiante de Ingeniería de Sistemas Computacionales 💻</h3>
-        
-        <p>Egresada técnica industrial con sólida práctica en mantenimiento, instalaciones de sistemas y cableado estructurado. Cuento con capacidad probada para desarrollar soluciones tecnológicas y dar soporte técnico integral, garantizando la continuidad operativa y la eficiencia en servicios generales. Actualmente continúo expandiendo mis conocimientos en la universidad para integrar el desarrollo de software avanzado con la automatización industrial.</p>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+        <a onclick="showSection('sobre-mi', this)">Sobre Mí</a>
+        <a onclick="showSection('software', this)">Manejo de Software</a>
+        <a onclick="showSection('idiomas', this)">Idiomas</a>
+        <a onclick="showSection('educacion', this)">Educación</a>
+        <a onclick="showSection('reconocimientos', this)">Reconocimientos</a>
+        <a onclick="showSection('cursos', this)">Cursos</a>
+        <a onclick="showSection('experiencia', this)">Experiencia Laboral</a>
+        <a onclick="showSection('proyectos', this)">Proyectos</a>
+        <a onclick="showSection('contacto', this)">Contáctate conmigo</a>
+    </div>
+
+    <div class="main-content">
+        <!-- PRESENTACIÓN AUTOMÁTICA -->
+        <div id="inicio" class="section-card active">
+            <h1 id="typing-text"><span class="cursor">&nbsp;</span></h1>
+            <h3>Electrónica Industrial ⚡ | Estudiante de Ingeniería de Sistemas Computacionales 💻</h3>
+            <p>> Egresada técnica industrial con sólida práctica en mantenimiento, instalaciones de sistemas y cableado estructurado. Cuento con capacidad probada para desarrollar soluciones tecnológicas y dar soporte técnico integral, garantizando la continuidad operativa y la eficiencia en servicios generales. Actualmente continúo expandiendo mis conocimientos en la universidad para integrar el desarrollo de software avanzado con la automatización industrial.</p>
+            <p align="center" style="color: var(--dev-pink);"><i>"Donde la mente imagina una solución, la ingeniería de sistemas la convierte en realidad."</i></p>
+        </div>
+
+        <!-- SOBRE MÍ -->
+        <div id="sobre-mi" class="section-card">
+            <h2>Sobre Mí</h2>
+            <div class="profile-container">
+                <img src="https://raw.githubusercontent.com/bianca2811/bianca2811/Certificados/Perfil.png" alt="Foto de Bianca Orihuela" class="profile-photo" onerror="this.src='https://via.placeholder.com/150/16192b/ff79c6?text=Dev+Woman'">
+                <div class="profile-info">
+                    <span class="info-tag">🎂 24 años</span>
+                    <span class="info-tag">📍 Rímac, Lima</span>
+                    <span class="info-tag">🎓 7mo Ciclo - Ing. de Sistemas</span>
+                    <span class="info-tag">💼 Practicante Preprofesional</span>
+                    <span class="info-tag">⭐ Altamente Responsable</span>
+                    <span class="info-tag">⏰ Horario Flexible</span>
+                </div>
+            </div>
+            <p>> Soy estudiante de 7mo ciclo de Ingeniería de Sistemas Computacionales y profesional técnica en Electrónica Industrial. Me destaco por mi sentido de responsabilidad, capacidad de adaptación y compromiso para aportar soluciones eficaces tanto en el área de desarrollo de software como en soporte técnico y automatización.</p>
+            <a href="https://raw.githubusercontent.com/bianca2811/bianca2811/Certificados/CV_Bianca_2026.pdf" target="_blank" class="btn-cv">📄 Descargar Curriculum Vitae (PDF)</a>
+        </div>
+
+        <!-- MANEJO DE SOFTWARE -->
+        <div id="software" class="section-card">
+            <h2>Manejo de Software</h2>
+            <div class="software-grid">
+                <div class="software-mini-card">
+                    <h4>💻 Desarrollo y Diseño</h4>
+                    <div class="badge-container">
+                        <span class="tech-tag">Python</span><span class="tech-tag">C#</span><span class="tech-tag">C++</span><span class="tech-tag">Apache NetBeans</span><span class="tech-tag">Visual Studio</span><span class="tech-tag">Pseint</span><span class="tech-tag">Dev C++</span><span class="tech-tag">Modelio (UML)</span><span class="tech-tag">Figma</span>
+                    </div>
+                </div>
+                <div class="software-mini-card">
+                    <h4>⚡ Automatización e Industrial</h4>
+                    <div class="badge-container">
+                        <span class="tech-tag">Arduino</span><span class="tech-tag">TIA Portal</span><span class="tech-tag">LOGO!Soft</span><span class="tech-tag">MPLAB</span><span class="tech-tag">PIC C Compiler CCS</span><span class="tech-tag">SimulIDE</span>
+                    </div>
+                </div>
+                <div class="software-mini-card">
+                    <h4>📊 Sistemas, BD y Datos</h4>
+                    <div class="badge-container">
+                        <span class="tech-tag">Windows Server</span><span class="tech-tag">VirtualBox</span><span class="tech-tag">SQL</span><span class="tech-tag">MySQL Workbench</span><span class="tech-tag">Power BI</span><span class="tech-tag">Excel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IDIOMAS -->
+        <div id="idiomas" class="section-card">
+            <h2>Idiomas</h2>
+            <div style="margin-top: 20px;">
+                <div class="item-card">
+                    <div class="idioma-header">
+                        <span class="flag-badge"><img src="https://flagcdn.com/w40/pe.png" alt="Perú" class="flag-icon"> Español (Nativo)</span>
+                        <span style="color: var(--dev-green);">100%</span>
+                    </div>
+                    <div class="progress-bar-container"><div class="progress-bar" style="width: 100%; background-color: var(--dev-green);"></div></div>
+                </div>
+                <div class="item-card">
+                    <div class="idioma-header">
+                        <span class="flag-badge"><img src="https://flagcdn.com/w40/us.png" alt="EE.UU." class="flag-icon"> Inglés (Básico)</span>
+                        <span style="color: var(--dev-cyan);">25%</span>
+                    </div>
+                    <div class="progress-bar-container"><div class="progress-bar" style="width: 25%; background-color: var(--dev-cyan);"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDUCACIÓN -->
+        <div id="educacion" class="section-card">
+            <h2>Educación</h2>
+            <div style="margin-top: 20px;">
+                <div class="item-card">
+                    <h4>🏫 I.E.P. LA FAMILIA UNIVERSAL SCHOOL</h4>
+                    <p>Secundaria (2014 - 2018)</p>
+                </div>
+                <div class="item-card">
+                    <h4>🏛️ I.E.S.P. Simón Bolívar</h4>
+                    <p>Egresada en Electrónica Industrial (2020 - 2022)</p>
+                    <a href="https://github.com/bianca2811/bianca2811/blob/Certificados/I.E.S.P.%20Simón%20Bolívar_Diploma%20Graduacion.jpg" target="_blank" class="card-link">📄 Ver Diploma de Graduación</a>
+                </div>
+                <div class="item-card">
+                    <h4>🏛️ Universidad Privada del Norte (UPN)</h4>
+                    <p>Cursando Ingeniería de Sistemas Computacionales (2023 - Actualidad)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECONOCIMIENTOS -->
+        <div id="reconocimientos" class="section-card">
+            <h2>Reconocimientos</h2>
+            <div style="margin-top: 20px;">
+                <div class="item-card">
+                    <h4>💊 Pastillero electrónico con alerta programable y confirmación de toma</h4>
+                    <p><strong style="color: var(--dev-yellow);">Solicitud de Patente 2026 - Universidad Privada del Norte</strong></p>
+                    <p>Un proyecto de innovación tecnológica enfocado en salud y soporte asistido.</p>
+                    <a href="https://github.com/bianca2811/bianca2811/blob/Certificados/UPN_Certificado%20De%20Reconocimiento.png" target="_blank" class="card-link">📄 Ver Certificado de Reconocimiento</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CURSOS -->
+        <div id="cursos" class="section-card">
+            <h2>Cursos</h2>
+            <div class="cursos-grid">
+                <div class="curso-badge-card"><span class="curso-titulo">Netzun: Excel Básico</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Netzun_Excel%20Básico.jpg" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+                <div class="curso-badge-card"><span class="curso-titulo">Netzun: Excel Intermedio</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Netzun_Excel%20Intermedio.jpg" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+                <div class="curso-badge-card"><span class="curso-titulo">Netzun: Power BI Básico</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Netzun_Power%20BI%20Básico.jpg" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+                <div class="curso-badge-card"><span class="curso-titulo">Netzun: Power BI Inter/Avanzado</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Netzun_Power%20BI%20Intermedio-Avanzado.jpg" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+                <div class="curso-badge-card"><span class="curso-titulo">Pc Leticia: Soporte Celulares</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Pc%20Leticia_Especialista%20en%20soporte%20técnico%20de%20celulares.jpg" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+                <div class="curso-badge-card"><span class="curso-titulo">Alura Latam: C# Lenguaje</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Alura%20Latam_C%23%20Conociendo%20el%20lenguaje.jpg" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+                <div class="curso-badge-card"><span class="curso-titulo">CTIC UNI: Machine Learning & IA</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/CTIC%20UNI_Machine%20Learning%20con%20Python%20%2B%20IA.png" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+                <div class="curso-badge-card"><span class="curso-titulo">ISIL: Ciberseguridad & Hacking</span><a href="https://github.com/bianca2811/bianca2811/blob/Certificados/ISIL_Ethical%20Hacking%20y%20Ciberseguridad.png" target="_blank" class="curso-hover-link">📄 Ver Certificado</a></div>
+            </div>
+        </div>
+
+        <!-- EXPERIENCIA LABORAL -->
+        <div id="experiencia" class="section-card">
+            <h2>Experiencia Laboral</h2>
+            <div style="margin-top: 20px;">
+                <div class="item-card">
+                    <h4>🎧 Teleperformance Perú SAC</h4>
+                    <p><strong>OP Customer Expert I</strong> (2026)</p>
+                    <a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Teleperformance%20Perú%20SAC%20-%20OP%20Customer%20Expert%20I.png" target="_blank" class="card-link">📄 Ver Constancia</a>
+                </div>
+                <div class="item-card">
+                    <h4>🛠️ Colegio Politécnico Nacional del Callao</h4>
+                    <p><strong>Técnico de Mantenimiento e Instalaciones</strong> (2020)</p>
+                    <a href="https://github.com/bianca2811/bianca2811/blob/Certificados/Colegio%20Politécnico%20Nacional%20del%20Callao%20-%20Técnico%20de%20Mantenimiento%20e%20Instalaciones.jpg" target="_blank" class="card-link">📄 Ver Constancia</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROYECTOS -->
+        <div id="proyectos" class="section-card">
+            <h2>Proyectos</h2>
+            <div style="margin-top: 20px;">
+                <div class="item-card"><h4>🌐 Lunorion</h4><p><strong style="color: var(--dev-pink);">Programadora Frontend</strong></p></div>
+                <div class="item-card"><h4>🎫 Sistema-Tickets</h4><p><strong style="color: var(--dev-pink);">Programadora Fullstack</strong></p></div>
+                <div class="item-card"><h4>🎨 SG_Calibrix_Frontend</h4><p><strong style="color: var(--dev-pink);">Diseñadora UI/UX</strong></p></div>
+                <div class="item-card"><h4>💊 Pastillero Electrónico Inteligente</h4><p><strong style="color: var(--dev-pink);">Desarrolladora de Hardware/Firmware</strong></p></div>
+            </div>
+        </div>
+
+        <!-- CONTACTO -->
+        <div id="contacto" class="section-card">
+            <h2>Contáctate conmigo</h2>
+            <div class="contacto-grid">
+                <a href="mailto:valeria_28125@hotmail.com" class="contacto-card">
+                    <div class="contacto-icon" style="background-color: rgba(139, 233, 253, 0.15); color: var(--dev-cyan);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    </div>
+                    <div class="contacto-info"><h4>Correo Electrónico</h4><p>valeria_28125@hotmail.com</p></div>
+                </a>
+                <a href="https://wa.me/51926990522?text=Hola%20Bianca,%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20contactarte." target="_blank" class="contacto-card">
+                    <div class="contacto-icon" style="background-color: rgba(80, 250, 123, 0.15); color: var(--dev-green);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </div>
+                    <div class="contacto-info"><h4>Teléfono / WhatsApp</h4><p>+51 926990522</p></div>
+                </a>
+                <a href="https://github.com/bianca2811?tab=overview&from=2026-10-01&to=2026-10-17" target="_blank" class="contacto-card">
+                    <div class="contacto-icon" style="background-color: rgba(255, 121, 198, 0.15); color: var(--dev-pink);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                    </div>
+                    <div class="contacto-info"><h4>GitHub</h4><p>bianca2811</p></div>
+                </a>
+                <a href="https://www.linkedin.com/in/bianca-orihuela-103b77131" target="_blank" class="contacto-card">
+                    <div class="contacto-icon" style="background-color: rgba(189, 147, 249, 0.15); color: var(--dev-purple);">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                    </div>
+                    <div class="contacto-info"><h4>LinkedIn</h4><p>bianca orihuela</p></div>
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Configuración del efecto máquina de escribir nativo
         const text = "¡Hola! Soy Bianca Valerie Orihuela Sanchez 👋";
         let index = 0;
-        const speed = 70; // Velocidad en milisegundos por letra
-
         function typeWriter() {
             if (index < text.length) {
-                // Inserta la letra antes del cursor parpadeante
-                document.getElementById("typing-text").innerHTML = text.substring(0, index + 1) + '<span class="cursor">&nbsp;</span>';
-                index++;
-                setTimeout(typeWriter, speed);
+                const el = document.getElementById("typing-text");
+                if (el) {
+                    el.innerHTML = text.substring(0, index + 1) + '<span class="cursor">&nbsp;</span>';
+                    index++;
+                    setTimeout(typeWriter, 60);
+                }
             }
         }
-
-        // Arranca la animación al cargar la página
+        function toggleMenu() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+        function showSection(sectionId, element) {
+            document.querySelectorAll('.section-card').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar a').forEach(link => link.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            if (element) element.classList.add('active');
+            toggleMenu();
+        }
         window.onload = typeWriter;
     </script>
 </body>
